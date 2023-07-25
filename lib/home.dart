@@ -17,8 +17,9 @@ class HomePage extends StatefulWidget{
 class _HomePage extends State<HomePage>{
   late Cart cart = Cart(isDone: false);
   @override
-  Widget build(BuildContext context){
-    if(widget.client.list_cart.length ==0){
+  void initState(){
+    super.initState();
+    if(widget.client.list_cart.isEmpty){
       cart.id = 1;
     }
     else{
@@ -27,7 +28,9 @@ class _HomePage extends State<HomePage>{
         cart.id = max(i.id as int,counter)+1;
       }
     }
-    widget.client.list_cart.add(cart);
+  }
+  @override
+  Widget build(BuildContext context){
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -63,7 +66,7 @@ class _HomePage extends State<HomePage>{
                     children: [
                       IconButton(
                           onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: cart),));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: cart,client: widget.client,),));
                           },
                           icon: const Icon(Icons.shopping_cart)
                       ),
@@ -156,9 +159,9 @@ class _HomePage extends State<HomePage>{
                               child: GridView.builder(
                                 itemCount: list_drinks.length,
                                 shrinkWrap: true,
-                                physics: AlwaysScrollableScrollPhysics(),
+                                physics: const AlwaysScrollableScrollPhysics(),
                                 itemBuilder: (context, index) => Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                                  margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                                   width: 100,
                                   height: MediaQuery.of(context).size.height/9,
                                   decoration: BoxDecoration(
@@ -182,7 +185,7 @@ class _HomePage extends State<HomePage>{
                                           child: Text(list_drinks[index].name as String),
                                           onPressed: (){
                                             Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => OptionPage(drink: list_drinks[index],cart: cart),)
+                                                MaterialPageRoute(builder: (context) => OptionPage(drink: list_drinks[index],cart: cart,client: widget.client,),)
                                             );
                                           },
                                         ),
@@ -209,7 +212,7 @@ class _HomePage extends State<HomePage>{
                               IconButton(onPressed: (){}, icon: const Icon(Icons.home)),
                               IconButton(onPressed: (){}, icon: const Icon(Icons.card_giftcard)),
                               IconButton(onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryPage(client: widget.client,),));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryPage(),));
                               }, icon: const Icon(Icons.bookmark_border)),
                             ],
                           )

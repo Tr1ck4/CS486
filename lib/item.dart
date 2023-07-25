@@ -10,7 +10,8 @@ const List<Widget> icer = <Widget>[Icon(Icons.one_k_outlined),Icon(Icons.two_k_o
 class OptionPage extends StatefulWidget{
   late Drinks drink;
   late Cart cart ;
-  OptionPage({super.key,required this.drink,required this.cart});
+  late Client client;
+  OptionPage({super.key,required this.drink,required this.cart,required this.client});
   @override
   State<OptionPage> createState()=>_OptionPage();
 }
@@ -46,8 +47,6 @@ class _OptionPage extends State<OptionPage>{
     final List<bool> _selectedsize = <bool>[true, false, false];
     final List<bool> _selectedice  = <bool>[true, false, false];
 
-
-    final int pr = widget.drink.price;
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -64,7 +63,7 @@ class _OptionPage extends State<OptionPage>{
                   ),
                   const Text('Details',style: TextStyle(fontSize: 20),),
                   IconButton(onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client:widget.client,),));
                   }, icon: const Icon(Icons.shopping_cart))
                 ],
               ),
@@ -86,17 +85,18 @@ class _OptionPage extends State<OptionPage>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: _incrementCounter,
+                          icon: const Icon(Icons.remove),
+                          onPressed: _decrementCounter,
                         ),
                         Text(
                           '$_counter',
                           style: const TextStyle(fontSize: 24.0),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: _decrementCounter,
+                          icon: const Icon(Icons.add),
+                          onPressed: _incrementCounter,
                         ),
+
                       ],
                     )
                   ],
@@ -184,12 +184,6 @@ class _OptionPage extends State<OptionPage>{
                             _selectedsize[i] = i == index;
                           }
                           size = index + 1;
-                          if(size==2){
-                            widget.drink.price = pr+2;
-                          }
-                          if(size==3){
-                            widget.drink.price = pr+3;
-                          }
                         });
                       },
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -241,7 +235,7 @@ class _OptionPage extends State<OptionPage>{
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text('Total amount'),
-                    Text('\$${widget.drink.calculateTotal()}')
+                    Text('\$${widget.drink.calculateTotal(size,shot)}')
                   ],
                 ),
               ),
@@ -250,9 +244,10 @@ class _OptionPage extends State<OptionPage>{
                   fixedSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width-40,MediaQuery.of(context).size.height/20))
                 ),
                 onPressed: (){
-                  if(widget.drink.calculateTotal() != 0 && cal() !=0){
+                  if(widget.drink.calculateTotal(size,shot) != 0 && cal() !=0){
                     widget.cart.list_contains.add(Contains(drink: widget.drink, type: cal()));
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client: widget.client,)));
+                    widget.drink = Drinks(name: widget.drink.name, price: widget.drink.price, image: widget.drink.image, counter: _counter);
                   }
                 },
                 child:  const Text('Add to cart'),

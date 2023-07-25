@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 import 'lister.dart';
 class ProfilePage extends StatefulWidget{
   late Client client;
@@ -155,6 +156,10 @@ class _ProfilePage extends State<ProfilePage>{
                   ],
                 )
             ),
+            FilledButton(onPressed: (){
+              list_client.add(widget.client);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(client:widget.client),));
+            }, child: const Text('Submit'))
           ],
         ),
       ),

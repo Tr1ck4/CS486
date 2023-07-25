@@ -4,7 +4,8 @@ import 'lister.dart';
 
 class CartPage extends StatefulWidget{
   late Cart cart ;
-  CartPage({super.key,required this.cart});
+  late Client client;
+  CartPage({super.key,required this.cart,required this.client});
   @override
   State<CartPage> createState()=>_CartPage();
 }
@@ -16,6 +17,9 @@ class _CartPage extends State<CartPage>{
   late int total = 0;
   @override
   Widget build(BuildContext context){
+    for (var i in widget.cart.list_contains){
+      total +=i.drink.calculateTotal(size,shot);
+    }
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -36,12 +40,10 @@ class _CartPage extends State<CartPage>{
                     shrinkWrap: true,
                     itemCount: widget.cart.list_contains.length,
                     itemBuilder: (context, index){
-                      total +=widget.cart.list_contains[index].drink.calculateTotal();
                       shot = (widget.cart.list_contains[index].type / 1000).round();
                       temp = (widget.cart.list_contains[index].type / 100 - shot*10).round();
                       size = (widget.cart.list_contains[index].type / 10 - temp*10 - shot*100).round();
                       ice =  (widget.cart.list_contains[index].type / 1 - size*10 - temp*100-shot*1000).round();
-                      print(widget.cart.list_contains[index].drink.name);
                       return Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                         height: MediaQuery.of(context).size.height/8,
@@ -93,7 +95,7 @@ class _CartPage extends State<CartPage>{
                                 alignment: Alignment.center,
                                 width: MediaQuery.of(context).size.height/15,
                                 height: MediaQuery.of(context).size.height/12,
-                                child: Text('\$${widget.cart.list_contains[index].drink.calculateTotal()}',style: const TextStyle(fontSize: 25),)//item mon
+                                child: Text('\$${widget.cart.list_contains[index].drink.calculateTotal(size,shot)}',style: const TextStyle(fontSize: 25),)//item mon
                             ),
                           ],
                         ),
@@ -110,7 +112,11 @@ class _CartPage extends State<CartPage>{
                           fixedSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width-40,MediaQuery.of(context).size.height/15))
                       ),
                       onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DonePage(),));
+                        DateTime now = DateTime.now();
+                        widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
+                        widget.client.list_cart.add(widget.cart);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => DonePage(client: widget.client,),));
+                        widget.cart = new Cart(isDone: false);
                       },
                       child:  Row(
                         crossAxisAlignment: CrossAxisAlignment.center,

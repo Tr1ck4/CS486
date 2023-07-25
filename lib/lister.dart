@@ -14,6 +14,7 @@ List<Client> list_client = [
   Client(address: 'Nothing', loyalty: 100, points: 1340,name:'User Interface',phone: '023456789',email: 'a1@gmail.com'),
 ];
 class Cart {
+  late String time = '';
   late int? id;
   late bool isDone;
   late List<Contains> list_contains = [];
@@ -33,8 +34,8 @@ class Drinks{
   late int counter = 0;
   Drinks({required this.name,required this.price,required this.image,required this.counter});
 
-  int calculateTotal(){
-     return counter*price;
+  int calculateTotal(int size,int shot){
+     return counter*(price + size -1 + shot -1);
   }
 }
 List<Drinks> list_drinks = [
