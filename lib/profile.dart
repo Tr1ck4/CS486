@@ -25,6 +25,10 @@ class _ProfilePage extends State<ProfilePage>{
   bool allow_phone = false;
   bool allow_email = false;
   bool allow_address = false;
+  late String aname = widget.client.name as String;
+  late String aphone = widget.client.phone as String;
+  late String aemail = widget.client.email as String;
+  late String aaddress = widget.client.address;
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -49,7 +53,7 @@ class _ProfilePage extends State<ProfilePage>{
                       enabled: allow_name,
                       onChanged: (String str){
                         setState(() {
-                          widget.client.name = str;
+                          aname = str;
                         });
                       },
                       decoration: InputDecoration(
@@ -81,13 +85,13 @@ class _ProfilePage extends State<ProfilePage>{
                         enabled: allow_phone,
                         onChanged: (String num){
                           setState(() {
-                            widget.client.phone = num;
+                            aphone = num;
                           });
                         },
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(vertical: 5),
                           hintText: 'Phone number',
-                          prefixIcon: Icon(Icons.phone),
+                          prefixIcon: const Icon(Icons.phone),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
@@ -111,7 +115,7 @@ class _ProfilePage extends State<ProfilePage>{
                         controller: email_texter,
                         enabled: allow_email,
                         onChanged: (String mail){
-                          widget.client.email = mail;
+                          aemail = mail;
                         },
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(vertical: 5),
@@ -140,7 +144,7 @@ class _ProfilePage extends State<ProfilePage>{
                         controller: address_texter,
                         enabled: allow_address,
                         onChanged: (String ad){
-                          widget.client.address = ad;
+                          aaddress = ad;
                         },
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(vertical: 5),
@@ -157,8 +161,9 @@ class _ProfilePage extends State<ProfilePage>{
                 )
             ),
             FilledButton(onPressed: (){
-              list_client.add(widget.client);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(client:widget.client),));
+
+              list_client.add(Client(address: aaddress, loyalty: widget.client.loyalty, points: widget.client.points,email: aemail, phone: aphone,name: aname));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(client:list_client.last),));
             }, child: const Text('Submit'))
           ],
         ),

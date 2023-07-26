@@ -14,12 +14,8 @@ class _CartPage extends State<CartPage>{
   late int temp =0;
   late int size =0;
   late int ice =0;
-  late int total = 0;
   @override
   Widget build(BuildContext context){
-    for (var i in widget.cart.list_contains){
-      total +=i.drink.calculateTotal(size,shot);
-    }
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -113,17 +109,20 @@ class _CartPage extends State<CartPage>{
                       ),
                       onPressed: (){
                         DateTime now = DateTime.now();
+                        for(var i in widget.cart.list_contains){
+                          widget.client.points+=i.drink.point as int;
+                        }
                         widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
                         widget.client.list_cart.add(widget.cart);
                         Navigator.push(context, MaterialPageRoute(builder: (context) => DonePage(client: widget.client,),));
-                        widget.cart = new Cart(isDone: false);
+                        widget.cart = Cart(isDone: false);
                       },
                       child:  Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const Icon(Icons.shopping_cart),
-                          Text('Checkout - \$$total',style: const TextStyle(fontSize: 20),),
+                          Text('Checkout - \$${widget.cart.calCart()}',style: const TextStyle(fontSize: 20),),
                         ],
                       )
                     ),

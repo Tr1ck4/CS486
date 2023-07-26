@@ -41,11 +41,16 @@ class _OptionPage extends State<OptionPage>{
     return type;
   }
   @override
+  void initState(){
+    super.initState();
+    widget.drink.counter = 0;
+  }
+  @override
   Widget build(BuildContext context){
-    final List<bool> _selectedshot = <bool>[true, false];
-    final List<bool> _selectedtemp = <bool>[true,false];
-    final List<bool> _selectedsize = <bool>[true, false, false];
-    final List<bool> _selectedice  = <bool>[true, false, false];
+    final List<bool> selectedshot = <bool>[true, false];
+    final List<bool> selectedtemp = <bool>[true,false];
+    final List<bool> selectedsize = <bool>[true, false, false];
+    final List<bool> selectedice  = <bool>[true, false, false];
 
     return Scaffold(
       body: SafeArea(
@@ -114,11 +119,11 @@ class _OptionPage extends State<OptionPage>{
                       onPressed: (int index) {
                         setState(() {
                           // The button that is tapped is set to true, and the others to false.
-                          for (int buttonIndex = 0; buttonIndex < _selectedshot.length; buttonIndex++) {
+                          for (int buttonIndex = 0; buttonIndex < selectedshot.length; buttonIndex++) {
                             if (buttonIndex == index) {
-                              _selectedshot[buttonIndex] = !_selectedshot[buttonIndex];
+                              selectedshot[buttonIndex] = !selectedshot[buttonIndex];
                             } else {
-                              _selectedshot[buttonIndex] = false;
+                              selectedshot[buttonIndex] = false;
                             }
                           }
                           shot = index + 1;
@@ -133,7 +138,7 @@ class _OptionPage extends State<OptionPage>{
                         minHeight: 40.0,
                         minWidth: 80.0,
                       ),
-                      isSelected: _selectedshot,
+                      isSelected: selectedshot,
                       children: shoter,
                     ),
                   ],
@@ -151,8 +156,8 @@ class _OptionPage extends State<OptionPage>{
                       onPressed: (int index){
                         setState(() {
                           // The button that is tapped is set to true, and the others to false.
-                          for (int i = 0; i < _selectedtemp.length; i++) {
-                            _selectedtemp[i] = i == index;
+                          for (int i = 0; i < selectedtemp.length; i++) {
+                            selectedtemp[i] = i == index;
                           }
                           select = index + 1;
                         });
@@ -162,7 +167,7 @@ class _OptionPage extends State<OptionPage>{
                       selectedColor: Colors.white,
                       fillColor: Colors.blue[200],
                       color: Colors.blue[400],
-                      isSelected: _selectedtemp,
+                      isSelected: selectedtemp,
                       children: selecter,
                     ),
                   ],
@@ -180,8 +185,8 @@ class _OptionPage extends State<OptionPage>{
                       onPressed: (int index) {
                         setState(() {
                           // The button that is tapped is set to true, and the others to false.
-                          for (int i = 0; i < _selectedsize.length; i++) {
-                            _selectedsize[i] = i == index;
+                          for (int i = 0; i < selectedsize.length; i++) {
+                            selectedsize[i] = i == index;
                           }
                           size = index + 1;
                         });
@@ -191,7 +196,7 @@ class _OptionPage extends State<OptionPage>{
                       selectedColor: Colors.white,
                       fillColor: Colors.blue[200],
                       color: Colors.blue[400],
-                      isSelected: _selectedsize,
+                      isSelected: selectedsize,
                       children: sizer,
                     ),
                   ],
@@ -209,8 +214,8 @@ class _OptionPage extends State<OptionPage>{
                       onPressed: (int index) {
                         setState(() {
                           // The button that is tapped is set to true, and the others to false.
-                          for (int i = 0; i < _selectedice.length; i++) {
-                            _selectedice[i] = i == index;
+                          for (int i = 0; i < selectedice.length; i++) {
+                            selectedice[i] = i == index;
                           }
                           ice = index + 1;
                         });
@@ -220,7 +225,7 @@ class _OptionPage extends State<OptionPage>{
                       selectedColor: Colors.white,
                       fillColor: Colors.blue[200],
                       color: Colors.blue[400],
-                      isSelected: _selectedice,
+                      isSelected: selectedice,
                       children: icer,
                     ),
                   ],

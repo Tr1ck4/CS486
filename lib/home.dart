@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cinema/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'rewards.dart';
 import 'cart.dart';
 import 'history.dart';
 import 'lister.dart';
@@ -53,7 +54,7 @@ class _HomePage extends State<HomePage>{
                               color: CupertinoColors.systemGrey2,
                               ),
                             ),
-                            Text(list_client[0].name as String,
+                            Text(widget.client.name as String,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 25,
@@ -180,15 +181,13 @@ class _HomePage extends State<HomePage>{
                                         ),
                                         margin: const EdgeInsets.fromLTRB(0, 10, 0,0),
                                       ),
-                                      Container(
-                                        child: TextButton(
-                                          child: Text(list_drinks[index].name as String),
-                                          onPressed: (){
-                                            Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => OptionPage(drink: list_drinks[index],cart: cart,client: widget.client,),)
-                                            );
-                                          },
-                                        ),
+                                      TextButton(
+                                        child: Text(list_drinks[index].name as String),
+                                        onPressed: (){
+                                          Navigator.push(context,
+                                              MaterialPageRoute(builder: (context) => OptionPage(drink: list_drinks[index],cart: cart,client: widget.client,),)
+                                          );
+                                        },
                                       )
                                     ],
                                   ),
@@ -203,14 +202,22 @@ class _HomePage extends State<HomePage>{
                               50),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.white
+                            color: Colors.white,
+                            boxShadow: const [BoxShadow(
+                              color: Colors.white12,
+                              blurRadius: 4,
+                              offset: Offset(4,8),
+                            )]
+
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               IconButton(onPressed: (){}, icon: const Icon(Icons.home)),
-                              IconButton(onPressed: (){}, icon: const Icon(Icons.card_giftcard)),
+                              IconButton(onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => RewardPage(client: widget.client,cart: cart,),));
+                              }, icon: const Icon(Icons.card_giftcard)),
                               IconButton(onPressed: (){
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryPage(),));
                               }, icon: const Icon(Icons.bookmark_border)),

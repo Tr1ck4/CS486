@@ -23,7 +23,7 @@ class DonePage extends StatelessWidget{
                 Container(
                   margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height/3, 0, 30),
                   height: 200,
-                  child: Icon(Icons.wallet_giftcard_outlined,size: 200),//change icon
+                  child: const Icon(Icons.wallet_giftcard_outlined,size: 200),//change icon
                 ),
                 const Text('Order Success',style: TextStyle(fontSize: 30),),
                 Container(

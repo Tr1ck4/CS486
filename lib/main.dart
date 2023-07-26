@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(client:list_client[0]),
+      home: HomePage(client:list_client.last),
     );
   }
 }
