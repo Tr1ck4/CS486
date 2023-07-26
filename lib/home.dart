@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cinema/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ class HomePage extends StatefulWidget{
 }
 class _HomePage extends State<HomePage>{
   late Cart cart = Cart(isDone: false);
+  List<Widget> ls = [];
   @override
   void initState(){
     super.initState();
@@ -28,6 +28,15 @@ class _HomePage extends State<HomePage>{
       for(var i in widget.client.list_cart){
         cart.id = max(i.id as int,counter)+1;
       }
+    }
+    if(widget.client.loyalty ==8){
+      widget.client.points +=500;
+    }
+    for(int i = 0 ; i < widget.client.loyalty;i++){
+      ls.add(Icon(Icons.coffee,color: Colors.black,));
+    }
+    for(int i = 0 ; i < 8-widget.client.loyalty;i++){
+      ls.add(Icon(Icons.coffee,color: Colors.grey,));
     }
   }
   @override
@@ -103,9 +112,9 @@ class _HomePage extends State<HomePage>{
                     child: Row(
                       crossAxisAlignment:  CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Loyalty card'),
-                        Text('4/8'),// Counter of order
+                      children: [
+                        const Text('Loyalty card'),
+                        Text('${widget.client.loyalty}/8'),// Counter of order
                       ],
                     ),
                   ),
@@ -124,16 +133,7 @@ class _HomePage extends State<HomePage>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee)
-                      ],
+                      children: ls
                     ),
                   )
                 ],

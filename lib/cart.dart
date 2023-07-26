@@ -40,61 +40,70 @@ class _CartPage extends State<CartPage>{
                       temp = (widget.cart.list_contains[index].type / 100 - shot*10).round();
                       size = (widget.cart.list_contains[index].type / 10 - temp*10 - shot*100).round();
                       ice =  (widget.cart.list_contains[index].type / 1 - size*10 - temp*100-shot*1000).round();
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                        height: MediaQuery.of(context).size.height/8,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(247, 248, 251, 50),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 10),
-                              width: MediaQuery.of(context).size.height/12,
-                              height: MediaQuery.of(context).size.height/12,
-                              child: Image(image: AssetImage(widget.cart.list_contains[index].drink.image),fit: BoxFit.cover,),// image item
+                      return Dismissible(
+                          background: Container(color: Colors.red,child:Icon(Icons.cancel)),
+                          key: ObjectKey(widget.cart.list_contains[index]),
+                          onDismissed: (direction) {
+                            setState(() {
+                              widget.cart.list_contains.removeAt(index);
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                            height: MediaQuery.of(context).size.height/8,
+                            decoration: BoxDecoration(
+                                color: const Color.fromRGBO(247, 248, 251, 50),
+                                borderRadius: BorderRadius.circular(10)
                             ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 10),
-                              width: MediaQuery.of(context).size.height/4.5,
-                              height: MediaQuery.of(context).size.height/12,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(widget.cart.list_contains[index].drink.name as String),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  width: MediaQuery.of(context).size.height/12,
+                                  height: MediaQuery.of(context).size.height/12,
+                                  child: Image(image: AssetImage(widget.cart.list_contains[index].drink.image),fit: BoxFit.cover,),// image item
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  width: MediaQuery.of(context).size.height/4.5,
+                                  height: MediaQuery.of(context).size.height/12,
+                                  child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      if(shot == 1)const Text('Single'),
-                                      if(shot == 2)const Text('Double'),
-                                      const Text('|'),
-                                      if(temp == 1)const Text('Hot'),
-                                      if(temp == 2)const Text('Cold'),
-                                      const Text('|'),
-                                      if(size == 1)const Text('Small'),
-                                      if(size == 2)const Text('Medium'),
-                                      if(size == 3)const Text('Large'),
-                                      const Text('|'),
-                                      if(ice == 1)const Text('30%'),
-                                      if(ice == 2)const Text('50%'),
-                                      if(ice == 3)const Text('70%'),
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(widget.cart.list_contains[index].drink.name as String),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          if(shot == 1)const Text('Single'),
+                                          if(shot == 2)const Text('Double'),
+                                          const Text('|'),
+                                          if(temp == 1)const Text('Hot'),
+                                          if(temp == 2)const Text('Cold'),
+                                          const Text('|'),
+                                          if(size == 1)const Text('Small'),
+                                          if(size == 2)const Text('Medium'),
+                                          if(size == 3)const Text('Large'),
+                                          const Text('|'),
+                                          if(ice == 1)const Text('30%'),
+                                          if(ice == 2)const Text('50%'),
+                                          if(ice == 3)const Text('70%'),
+                                        ],
+                                      ),
+                                      Text('x${widget.cart.list_contains[index].drink.counter}'),
                                     ],
                                   ),
-                                  Text('x${widget.cart.list_contains[index].drink.counter}'),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.height/15,
+                                    height: MediaQuery.of(context).size.height/12,
+                                    child: Text('\$${widget.cart.list_contains[index].drink.calculateTotal(size,shot)}',style: const TextStyle(fontSize: 25),)//item mon
+                                ),
+                              ],
                             ),
-                            Container(
-                                alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.height/15,
-                                height: MediaQuery.of(context).size.height/12,
-                                child: Text('\$${widget.cart.list_contains[index].drink.calculateTotal(size,shot)}',style: const TextStyle(fontSize: 25),)//item mon
-                            ),
-                          ],
-                        ),
+                          )
                       );
                     }
                 ),
@@ -108,14 +117,19 @@ class _CartPage extends State<CartPage>{
                           fixedSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width-40,MediaQuery.of(context).size.height/15))
                       ),
                       onPressed: (){
-                        DateTime now = DateTime.now();
-                        for(var i in widget.cart.list_contains){
-                          widget.client.points+=i.drink.point as int;
-                        }
-                        widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
-                        widget.client.list_cart.add(widget.cart);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DonePage(client: widget.client,),));
-                        widget.cart = Cart(isDone: false);
+                        setState(() {
+                          if(widget.cart.calCart() >0){
+                            DateTime now = DateTime.now();
+                            for(var i in widget.cart.list_contains){
+                              widget.client.points+=i.drink.point;
+                            }
+                            widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
+                            widget.client.list_cart.add(widget.cart);
+                            widget.client.loyalty += widget.cart.list_contains.length;
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DonePage(client: widget.client,),));
+                            widget.cart = Cart(isDone: false);
+                          }
+                        });
                       },
                       child:  Row(
                         crossAxisAlignment: CrossAxisAlignment.center,

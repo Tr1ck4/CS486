@@ -4,13 +4,13 @@ class Client{
   late String? phone;
   late String? email;
   late String address;
-  final int loyalty;
+  late int loyalty;
   late int points;
   late List<Cart> list_cart =[];
   Client({this.name,this.phone,this.email,required this.address,required this.loyalty,required this.points});
 }
 List<Client> list_client = [
-  Client(address: 'Nothing', loyalty: 100, points: 1340,name:'User Interface',phone: '023456789',email: 'a1@gmail.com'),
+  Client(address: 'Nothing', loyalty: 1, points: 1340,name:'User Interface',phone: '023456789',email: 'a1@gmail.com'),
 ];
 class Cart {
   late String time = '';
@@ -48,8 +48,8 @@ class Drinks{
   late int price ;
   final String image;
   late int counter = 0;
-  late int? point = 12;
-  Drinks({required this.name,required this.price,required this.image,required this.counter,this.point});
+  late int point = 12;
+  Drinks({required this.name,required this.price,required this.image,required this.counter,required this.point});
 
   int calculateTotal(int size,int shot){
     return counter*(price + size -1 + shot -1);
@@ -62,8 +62,8 @@ List<Drinks> list_voucher = [
   Drinks(name: 'Esspresso', price: 25,image:'assets/images/esspresso.jpg',counter:0,point: 1000),
 ];
 List<Drinks> list_drinks = [
-  Drinks(name: 'Cappucino', price: 25,image:'assets/images/cappucino.jpg',counter:0),
-  Drinks(name: 'Americano', price: 25,image:'assets/images/americano.jpg',counter:0),
-  Drinks(name: 'Latte', price: 25,image:'assets/images/latte.jpg',counter:0),
-  Drinks(name: 'Esspresso', price: 25,image:'assets/images/esspresso.jpg',counter:0),
+  Drinks(name: 'Cappucino', price: 25,image:'assets/images/cappucino.jpg',counter:0,point: 12),
+  Drinks(name: 'Americano', price: 25,image:'assets/images/americano.jpg',counter:0,point: 12),
+  Drinks(name: 'Latte', price: 25,image:'assets/images/latte.jpg',counter:0,point: 12),
+  Drinks(name: 'Esspresso', price: 25,image:'assets/images/esspresso.jpg',counter:0,point: 12),
 ];

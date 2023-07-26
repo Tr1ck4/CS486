@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'cart.dart';
 import 'lister.dart';
 class RedeemPage extends StatefulWidget{
   late Client client;
@@ -58,20 +59,13 @@ class _RedeemPage extends State<RedeemPage>{
                               ),
                               FilledButton(
                                 onPressed: (){
-                                    if(widget.client.points >=list_voucher[index].point!){
-                                      widget.client.points -= list_voucher[index].point!;
-                                      widget.client.list_cart.last.list_contains.add(Contains(
-                                          drink: Drinks(
-                                              name: list_voucher[index].name,
-                                              price: 0,
-                                              image: list_voucher[index].image,
-                                              counter: 1),
-                                          type: 1111)
-                                      );
-                                      DateTime now = DateTime.now();
-                                      widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
-                                      widget.client.list_cart.add(widget.cart);
-                                    }
+                                  if(widget.client.points - (list_voucher[index].point) >=0){
+                                    widget.client.points -= (list_voucher[index].point);
+                                    Drinks drinks = Drinks(name: list_voucher[index].name, price: 0, image: list_voucher[index].image, counter: 0,point: 0);
+                                    widget.cart.list_contains.add(Contains(drink: drinks, type: 1111));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client: widget.client,)));
+                                    print(widget.cart.id);
+                                  }
                                 },
                                 style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.indigoAccent)),
                                 child: Text(
@@ -84,12 +78,7 @@ class _RedeemPage extends State<RedeemPage>{
                         )
                       );
                     }
-                    if(ls.isEmpty){
-                      return null;
-                    }
-                    else {
-                      return Column(children: ls,);
-                    }
+                    return ls.isEmpty? null:Column(children: ls,);
                   },
                 ),
               ),

@@ -12,6 +12,17 @@ class RewardPage extends StatefulWidget{
   State<RewardPage> createState()=>_RewardPage();
 }
 class _RewardPage extends State<RewardPage>{
+  List<Widget> ls = [];
+  @override
+  void initState(){
+    super.initState();
+    for(int i = 0 ; i < widget.client.loyalty;i++){
+      ls.add(Icon(Icons.coffee,color: Colors.black,));
+    }
+    for(int i = 0 ; i < 8-widget.client.loyalty;i++){
+      ls.add(Icon(Icons.coffee,color: Colors.grey,));
+    }
+  }
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -44,9 +55,9 @@ class _RewardPage extends State<RewardPage>{
                     child: Row(
                       crossAxisAlignment:  CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Loyalty card',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                        Text('4/8'),// Counter of order
+                      children: [
+                        const Text('Loyalty card',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                        Text('${widget.client.loyalty}/8'),// Counter of order
                       ],
                     ),
                   ),
@@ -65,16 +76,7 @@ class _RewardPage extends State<RewardPage>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee),
-                        Icon(Icons.coffee)
-                      ],
+                      children: ls
                     ),
                   )
                 ],

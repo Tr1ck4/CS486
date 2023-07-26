@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'Rewards.dart';
 import 'home.dart';
 import 'lister.dart';
 import 'main.dart';
@@ -13,22 +12,28 @@ class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
   late TabController _tabController;
   int tr = 0;
   int f = 0;
+  List<Cart> on = [];
+  List<Cart> off = [];
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     for(var i in list_client){
       for (var  j in i.list_cart){
-        if(j.isDone ==false) f++;
-      }
-    }
-    for(var i in list_client){
-      for (var  j in i.list_cart){
-        if(j.isDone ==true) tr++;
+        if(j.isDone ==false) {
+          on.add(j);
+        } else{
+          off.add(j);
+        }
       }
     }
   }
+  @override
+  void refresh(){
+    setState(() {
 
+    });
+  }
   @override
   void dispose() {
     _tabController.dispose();
@@ -62,133 +67,122 @@ class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
       ),
       body: TabBarView(
         controller: _tabController,
+        physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           ListView.builder(
             shrinkWrap: true,
             physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: f,
+            itemCount: list_client.length,
             itemBuilder: (context, index){
-              List<Widget> view = [];
-              if(index ==0){
-                for(var i in list_client){
-                  for (var j in i.list_cart){
-                    if(j.isDone == false){
-                      for(var f in j.list_contains){
-                        view.add(
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(j.time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const Icon(Icons.coffee),
-                                            Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(f.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
+              List<Widget> ls = [];
+              for(var i in list_client[index].list_cart){
+                if(i.isDone == false){
+                  for(var j in i.list_contains){
+                    ls.add(
+                      InkWell(
+                          onTap: (){
+                            i.isDone = true;
+                            refresh();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(on[index].time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(Icons.coffee),
+                                          Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(j.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
 
-                                          ],
-                                        ),
+                                        ],
                                       ),
-                                      Text('\$${f.drink.calculateTotal(((f.type%100 - f.type%10)/10).round(),((f.type - f.type%1000-f.type%100 - f.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
+                                    ),
+                                    Text('\$${j.drink.calculateTotal(((j.type%100 - j.type%10)/10).round(),((j.type - j.type%1000-j.type%100 - j.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 85,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Icon(Icons.map_outlined),
+                                      Text(list_client[index].address,style: const TextStyle(fontWeight: FontWeight.bold),)
                                     ],
                                   ),
-                                  SizedBox(
-                                    width: 85,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Icon(Icons.map_outlined),
-                                        Text(i.address,style: const TextStyle(fontWeight: FontWeight.bold),)
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                        );
-
-                      }
-                    }
+                                ),
+                              ],
+                            ),
+                          )
+                      )
+                    );
                   }
                 }
               }
-              if(view.isEmpty){
-                return null;
-              }
-              else {
-                return Column(children: view,);
-              }
-            },
+              return ls.isEmpty ? null : Column(children: ls,);
+            }
           ),
           ListView.builder(
-            shrinkWrap: true,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: f,
-            itemBuilder: (context, index){
-              for(var i in  list_client){
-                for (var j in i.list_cart){
-                  if(j.isDone == true){
-                    for(var f in j.list_contains){
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(j.time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 100,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Icon(Icons.coffee),
-                                      Text(f.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                ),
-                                Text('\$${f.drink.calculateTotal(((f.type%100 - f.type%10)/10).round(),((f.type - f.type%1000-f.type%100 - f.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.map_outlined),
-                                SizedBox(
-                                  width: 120,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Icon(Icons.coffee),
-                                      Text(i.address,style: const TextStyle(fontWeight: FontWeight.bold),)
-                                    ],
-                                  ),
-                                ),
+              shrinkWrap: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: list_client.length,
+              itemBuilder: (context, index){
+                List<Widget> ls = [];
+                for(var i in list_client[index].list_cart){
+                  if(i.isDone == true){
+                    for(var j in i.list_contains){
+                      ls.add(
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(on[index].time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const Icon(Icons.coffee),
+                                        Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(j.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
 
-                              ],
-                            ),
-                          ],
-                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text('\$${j.drink.calculateTotal(((j.type%100 - j.type%10)/10).round(),((j.type - j.type%1000-j.type%100 - j.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 85,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Icon(Icons.map_outlined),
+                                    Text(list_client[index].address,style: const TextStyle(fontWeight: FontWeight.bold),)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       );
                     }
                   }
                 }
+                return ls.isEmpty ? null : Column(children: ls,);
               }
-              return null;
-            },
           ),
-
         ]
       ),
       bottomNavigationBar: Container(
@@ -214,7 +208,7 @@ class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
                 Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(client: list_client.last),));
               }, icon: const Icon(Icons.home)),
               IconButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RewardPage(client: list_client.last,cart: list_client.last.list_cart.last ),));
+                Navigator.pop(context);
               }, icon: const Icon(Icons.card_giftcard)),
               IconButton(onPressed: (){
               }, icon: const Icon(Icons.bookmark_border)),

@@ -3,9 +3,9 @@ import 'cart.dart';
 import 'lister.dart';
 
 const List<Widget> shoter = <Widget>[Text('Single'),Text('Double')];
-const List<Widget> selecter = <Widget>[Icon(Icons.fire_extinguisher),Icon(Icons.ice_skating)];
-const List<Widget> sizer = <Widget>[Icon(Icons.brightness_1_outlined),Icon(Icons.brightness_medium),Icon(Icons.brightness_7)];
-const List<Widget> icer = <Widget>[Icon(Icons.one_k_outlined),Icon(Icons.two_k_outlined),Icon(Icons.three_k_outlined)];
+const List<Widget> selecter = <Widget>[ImageIcon(AssetImage('assets/icon/hot.png'),color: Colors.black),ImageIcon(AssetImage('assets/icon/cold.png'),color: Colors.black,)];
+const List<Widget> sizer = <Widget>[Text('S'),Text('M'),Text('L'),];
+const List<Widget> icer = <Widget>[ImageIcon(AssetImage('assets/icon/small.png')),ImageIcon(AssetImage('assets/icon/med.png'),size: 40),ImageIcon(AssetImage('assets/icon/lar.png'),size: 40,)];
 
 class OptionPage extends StatefulWidget{
   late Drinks drink;
@@ -22,6 +22,10 @@ class _OptionPage extends State<OptionPage>{
   late int ice =0;
   late int type =0;
   int _counter = 0;
+  late List<bool> selectedshot = <bool>[false, false];
+  late List<bool> selectedtemp = <bool>[false, false];
+  late List<bool> selectedsize = <bool>[false, false, false];
+  late List<bool> selectedice  = <bool>[false, false, false];
   void _incrementCounter() {
     setState(() {
       _counter++;
@@ -47,10 +51,6 @@ class _OptionPage extends State<OptionPage>{
   }
   @override
   Widget build(BuildContext context){
-    final List<bool> selectedshot = <bool>[true, false];
-    final List<bool> selectedtemp = <bool>[true,false];
-    final List<bool> selectedsize = <bool>[true, false, false];
-    final List<bool> selectedice  = <bool>[true, false, false];
 
     return Scaffold(
       body: SafeArea(
@@ -115,25 +115,21 @@ class _OptionPage extends State<OptionPage>{
                   children: <Widget>[
                     const Text('Shot',style: TextStyle(fontSize: 20),),
                     ToggleButtons(
-                      direction: Axis.horizontal,
+                      direction:Axis.horizontal,
                       onPressed: (int index) {
                         setState(() {
                           // The button that is tapped is set to true, and the others to false.
-                          for (int buttonIndex = 0; buttonIndex < selectedshot.length; buttonIndex++) {
-                            if (buttonIndex == index) {
-                              selectedshot[buttonIndex] = !selectedshot[buttonIndex];
-                            } else {
-                              selectedshot[buttonIndex] = false;
-                            }
+                          for (int i = 0; i < selectedshot.length; i++) {
+                            selectedshot[i] = i == index;
+                            shot = index + 1;
                           }
-                          shot = index + 1;
                         });
                       },
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
                       selectedBorderColor: Colors.red[700],
                       selectedColor: Colors.white,
-                      fillColor: Colors.red[200],
-                      color: Colors.red[400],
+                      fillColor: Colors.blue[200],
+                      color: Colors.blue[400],
                       constraints: const BoxConstraints(
                         minHeight: 40.0,
                         minWidth: 80.0,
@@ -214,18 +210,23 @@ class _OptionPage extends State<OptionPage>{
                       onPressed: (int index) {
                         setState(() {
                           // The button that is tapped is set to true, and the others to false.
-                          for (int i = 0; i < selectedice.length; i++) {
-                            selectedice[i] = i == index;
+                          if(select ==2) {
+                            for (int i = 0; i < selectedice.length; i++) {
+                              selectedice[i] = i == index;
+                            }
+                            ice = index + 1;
+                          }else{
+                            selectedice = <bool>[false,false,false];
+                            ice = 0;
                           }
-                          ice = index + 1;
                         });
                       },
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      isSelected: selectedice,
                       selectedBorderColor: Colors.blue[700],
                       selectedColor: Colors.white,
                       fillColor: Colors.blue[200],
                       color: Colors.blue[400],
-                      isSelected: selectedice,
                       children: icer,
                     ),
                   ],
@@ -249,10 +250,11 @@ class _OptionPage extends State<OptionPage>{
                   fixedSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width-40,MediaQuery.of(context).size.height/20))
                 ),
                 onPressed: (){
-                  if(widget.drink.calculateTotal(size,shot) != 0 && cal() !=0){
+                  print(type);
+                  if(widget.drink.calculateTotal(size,shot) != 0 && cal() !=0 && type >=1110){
                     widget.cart.list_contains.add(Contains(drink: widget.drink, type: cal()));
                     Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client: widget.client,)));
-                    widget.drink = Drinks(name: widget.drink.name, price: widget.drink.price, image: widget.drink.image, counter: _counter);
+                    widget.drink = Drinks(name: widget.drink.name, price: widget.drink.price, image: widget.drink.image, counter: _counter,point: widget.drink.point);
                   }
                 },
                 child:  const Text('Add to cart'),
@@ -261,5 +263,7 @@ class _OptionPage extends State<OptionPage>{
           ),
       ),
     );
+
   }
+
 }
