@@ -23,6 +23,7 @@ class _RedeemPage extends State<RedeemPage>{
                     Navigator.pop(context);
                   },color: Colors.black,),
                   Container(
+                    alignment: Alignment.center,
                     margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                     height: 40,
                     child: const Text('Redeem',style: TextStyle(fontSize: 25),),
@@ -61,10 +62,10 @@ class _RedeemPage extends State<RedeemPage>{
                                 onPressed: (){
                                   if(widget.client.points - (list_voucher[index].point) >=0){
                                     widget.client.points -= (list_voucher[index].point);
+                                    print(widget.cart.id);
                                     Drinks drinks = Drinks(name: list_voucher[index].name, price: 0, image: list_voucher[index].image, counter: 0,point: 0);
                                     widget.cart.list_contains.add(Contains(drink: drinks, type: 1111));
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client: widget.client,)));
-                                    print(widget.cart.id);
                                   }
                                 },
                                 style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.indigoAccent)),

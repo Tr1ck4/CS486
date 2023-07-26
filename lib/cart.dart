@@ -118,10 +118,13 @@ class _CartPage extends State<CartPage>{
                       ),
                       onPressed: (){
                         setState(() {
-                          if(widget.cart.calCart() >0){
+                          print(widget.cart.id);
+                          if(widget.cart.list_contains.isNotEmpty){
                             DateTime now = DateTime.now();
                             for(var i in widget.cart.list_contains){
-                              widget.client.points+=i.drink.point;
+                              if(i.drink.price >0){
+                                widget.client.points+=i.drink.point;
+                              }
                             }
                             widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
                             widget.client.list_cart.add(widget.cart);

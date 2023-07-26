@@ -22,6 +22,9 @@ class _RewardPage extends State<RewardPage>{
     for(int i = 0 ; i < 8-widget.client.loyalty;i++){
       ls.add(Icon(Icons.coffee,color: Colors.grey,));
     }
+    setState(() {
+
+    });
   }
   @override
   Widget build(BuildContext context){
