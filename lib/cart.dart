@@ -41,7 +41,7 @@ class _CartPage extends State<CartPage>{
                       size = (widget.cart.list_contains[index].type / 10 - temp*10 - shot*100).round();
                       ice =  (widget.cart.list_contains[index].type / 1 - size*10 - temp*100-shot*1000).round();
                       return Dismissible(
-                          background: Container(color: Colors.red,child:Icon(Icons.cancel)),
+                          background: Container(color: Colors.red,child:const Icon(Icons.cancel)),
                           key: ObjectKey(widget.cart.list_contains[index]),
                           onDismissed: (direction) {
                             setState(() {

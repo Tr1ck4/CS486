@@ -118,7 +118,6 @@ class _OptionPage extends State<OptionPage>{
                       direction:Axis.horizontal,
                       onPressed: (int index) {
                         setState(() {
-                          // The button that is tapped is set to true, and the others to false.
                           for (int i = 0; i < selectedshot.length; i++) {
                             selectedshot[i] = i == index;
                             shot = index + 1;
@@ -151,7 +150,6 @@ class _OptionPage extends State<OptionPage>{
                       direction: Axis.horizontal,
                       onPressed: (int index){
                         setState(() {
-                          // The button that is tapped is set to true, and the others to false.
                           for (int i = 0; i < selectedtemp.length; i++) {
                             selectedtemp[i] = i == index;
                           }
@@ -180,7 +178,6 @@ class _OptionPage extends State<OptionPage>{
                       direction: Axis.horizontal,
                       onPressed: (int index) {
                         setState(() {
-                          // The button that is tapped is set to true, and the others to false.
                           for (int i = 0; i < selectedsize.length; i++) {
                             selectedsize[i] = i == index;
                           }
@@ -209,7 +206,6 @@ class _OptionPage extends State<OptionPage>{
                       direction: Axis.horizontal,
                       onPressed: (int index) {
                         setState(() {
-                          // The button that is tapped is set to true, and the others to false.
                           if(select ==2) {
                             for (int i = 0; i < selectedice.length; i++) {
                               selectedice[i] = i == index;

@@ -4,7 +4,7 @@ import 'lister.dart';
 import 'main.dart';
 
 class HistoryPage extends StatefulWidget{
-  HistoryPage({super.key});
+  const HistoryPage({super.key});
   @override
   State<HistoryPage> createState()=>_HistoryPage();
 }
@@ -28,7 +28,6 @@ class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
       }
     }
   }
-  @override
   void refresh(){
     setState(() {
 
@@ -67,7 +66,7 @@ class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
       ),
       body: TabBarView(
         controller: _tabController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: <Widget>[
           ListView.builder(
             shrinkWrap: true,

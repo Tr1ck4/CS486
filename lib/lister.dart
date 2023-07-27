@@ -9,7 +9,7 @@ class Client{
   Client({this.name,this.phone,this.email,required this.address,required this.loyalty,required this.points});
 }
 List<Client> list_client = [
-  Client(address: 'Nothing', loyalty: 1, points: 1340,name:'User Interface',phone: '023456789',email: 'a1@gmail.com'),
+  Client(address: 'Nothing', loyalty: 1, points: 1340,name:'User',phone: '023456789',email: 'a1@gmail.com'),
 ];
 class Cart {
   late String time = '';
@@ -55,14 +55,14 @@ class Drinks{
   }
 }
 List<Drinks> list_voucher = [
-  Drinks(name: 'Cappucino', price: 25,image:'assets/images/cappucino.jpg',counter:0,point: 1340),
+  Drinks(name: 'Cappuccino', price: 25,image:'assets/images/cappucino.jpg',counter:0,point: 1340),
   Drinks(name: 'Americano', price: 25,image:'assets/images/americano.jpg',counter:0,point: 1200),
   Drinks(name: 'Latte', price: 25,image:'assets/images/latte.jpg',counter:0,point: 1200),
-  Drinks(name: 'Esspresso', price: 25,image:'assets/images/esspresso.jpg',counter:0,point: 1000),
+  Drinks(name: 'Espresso', price: 25,image:'assets/images/esspresso.jpg',counter:0,point: 1000),
 ];
 List<Drinks> list_drinks = [
-  Drinks(name: 'Cappucino', price: 25,image:'assets/images/cappucino.jpg',counter:0,point: 12),
+  Drinks(name: 'Cappuccino', price: 25,image:'assets/images/cappucino.jpg',counter:0,point: 12),
   Drinks(name: 'Americano', price: 25,image:'assets/images/americano.jpg',counter:0,point: 12),
   Drinks(name: 'Latte', price: 25,image:'assets/images/latte.jpg',counter:0,point: 12),
-  Drinks(name: 'Esspresso', price: 25,image:'assets/images/esspresso.jpg',counter:0,point: 12),
+  Drinks(name: 'Espresso', price: 25,image:'assets/images/esspresso.jpg',counter:0,point: 12),
 ];

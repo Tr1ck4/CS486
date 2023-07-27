@@ -33,10 +33,10 @@ class _HomePage extends State<HomePage>{
       widget.client.points +=500;
     }
     for(int i = 0 ; i < widget.client.loyalty;i++){
-      ls.add(Icon(Icons.coffee,color: Colors.black,));
+      ls.add(const Icon(Icons.coffee,color: Colors.black,));
     }
     for(int i = 0 ; i < 8-widget.client.loyalty;i++){
-      ls.add(Icon(Icons.coffee,color: Colors.grey,));
+      ls.add(const Icon(Icons.coffee,color: Colors.grey,));
     }
   }
   @override
@@ -140,6 +140,7 @@ class _HomePage extends State<HomePage>{
               ),
               Expanded(
                   child: Container(
+                    height: double.maxFinite,
                     decoration: const BoxDecoration(
                       color: Colors.indigo,
                       borderRadius: BorderRadius.only(
@@ -199,42 +200,45 @@ class _HomePage extends State<HomePage>{
                               ), gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                           )
                         ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.width/20,
-                              20,
-                              MediaQuery.of(context).size.width/20,
-                              50),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: const [BoxShadow(
-                              color: Colors.white12,
-                              blurRadius: 4,
-                              offset: Offset(4,8),
-                            )]
-
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                              margin: EdgeInsets.fromLTRB(
+                                  MediaQuery.of(context).size.width/20,
+                                  20,
+                                  MediaQuery.of(context).size.width/20,
+                                  50),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: const [BoxShadow(
+                                    color: Colors.black38,
+                                    blurRadius: 4,
+                                    offset: Offset(4,8),
+                                  )]
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  IconButton(onPressed: (){}, icon: const Icon(Icons.home)),
+                                  IconButton(onPressed: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RewardPage(client: widget.client,cart: cart,),));
+                                  }, icon: const Icon(Icons.card_giftcard)),
+                                  IconButton(onPressed: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryPage(),));
+                                  }, icon: const Icon(Icons.bookmark_border)),
+                                ],
+                              )
                           ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(onPressed: (){}, icon: const Icon(Icons.home)),
-                              IconButton(onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => RewardPage(client: widget.client,cart: cart,),));
-                              }, icon: const Icon(Icons.card_giftcard)),
-                              IconButton(onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryPage(),));
-                              }, icon: const Icon(Icons.bookmark_border)),
-                            ],
-                          )
                         )
-                      ],
-                    ),
+
+                      ]
                   )
-              )
-            ],
-          )
+                  )
+              ),
+
+          ])
       ),
     );
   }
