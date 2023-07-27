@@ -176,11 +176,16 @@ class _HomePage extends State<HomePage>{
                                     children: [
                                       Container(
                                         height: MediaQuery.of(context).size.height/8,
-                                        width: MediaQuery.of(context).size.height/6.5,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(image: AssetImage(list_drinks[index].image),fit: BoxFit.cover)
-                                        ),
+                                        width: MediaQuery.of(context).size.height/6,
                                         margin: const EdgeInsets.fromLTRB(0, 10, 0,0),
+                                        child: IconButton(
+                                          onPressed: (){
+                                            Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => OptionPage(drink: list_drinks[index],cart: cart,client: widget.client,),)
+                                            );
+                                          },
+                                          icon: Image(image:AssetImage(list_drinks[index].image)),
+                                        ),
                                       ),
                                       TextButton(
                                         child: Text(list_drinks[index].name as String),

@@ -1,9 +1,12 @@
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:cinema/object.dart';
 import 'dart:async';
 import 'dart:io' as io;
-class DatabaseHelper{
+/*class DatabaseHelper{
   static final DatabaseHelper instance = DatabaseHelper._init();
 
   static Database? _database;
@@ -107,7 +110,8 @@ class DatabaseHelper{
     return List.generate(maps.length, (index) => Client.fromJson(maps[index]));
   }
 
-  /*static Future<int> addCart(Cart cart) async{
+  */
+/*static Future<int> addCart(Cart cart) async{
     final db = await instance.database;
     return await db.insert("Cart", cart.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -184,10 +188,119 @@ class DatabaseHelper{
     }
     return List.generate(maps.length, (index) => Drinks.fromJson(maps[index]));
   }*/
+/*
 
   Future close() async {
     final db = await instance.database;
 
     db.close();
   }
+}*/
+
+
+class Employee {
+  late int id;
+  late String name;
+
+  Employee(this.id, this.name);
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      'id': id,
+      'name': name,
+    };
+    return map;
+  }
+
+  Employee.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    name = map['name'];
+  }
 }
+class DBHelper {
+  static late Database _db;
+  static const String ID = 'id';
+  static const String NAME = 'name';
+  static const String TABLE = 'Employee';
+  static const String DB_NAME = 'employee1.db';
+
+  Future<Database> get db async {
+    if (_db != null) {
+      return _db;
+    }
+    _db = await initDb();
+    return _db;
+  }
+
+  initDb() async {  //init db
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, DB_NAME);
+    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    return db;
+  }
+
+  _onCreate(Database db, int version) async { //tạo database
+    await db
+        .execute("CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY, $NAME TEXT)");
+  }
+
+  Future<Employee> save(Employee employee) async {  // insert employee vào bảng đơn giản
+    var dbClient = await db;
+    employee.id = await dbClient.insert(TABLE, employee.toMap());
+    return employee;
+    /*
+    await dbClient.transaction((txn) async {
+      var query = "INSERT INTO $TABLE ($NAME) VALUES ('" + employee.name + "')";
+      return await txn.rawInsert(query); //các bạn có thể sử dụng rawQuery nếu truy vẫn phức tạp để thay thế cho các phước thức có sẵn của lớp Database.
+    });
+    */
+  }
+
+  Future<List<Employee>> getEmployees() async {  //get list employees đơn giản
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(TABLE, columns: [ID, NAME]);
+    //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
+    List<Employee> employees = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        employees.add(Employee.fromMap(maps[i]));
+      }
+    }
+    return employees;
+  }
+
+  Future<int> delete(int id) async { // xóa employee
+    var dbClient = await db;
+    return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]); //where - xóa tại ID nào, whereArgs - argument là gì?
+  }
+
+  Future<int> update(Employee employee) async {
+    var dbClient = await db;
+    return await dbClient.update(TABLE, employee.toMap(),
+        where: '$ID = ?', whereArgs: [employee.id]);
+  }
+
+  Future close() async { //close khi không sử dụng
+    var dbClient = await db;
+    dbClient.close();
+  }
+}
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: DBTestPage(title: 'Flutter Demo DBTestPage'),
+    );
+  }
+}
+

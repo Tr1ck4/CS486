@@ -1,149 +1,135 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-/// Flutter code sample for [ToggleButtons].
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
-const List<Widget> fruits = <Widget>[
-  Text('Apple'),
-  Text('Banana'),
-  Text('Orange')
-];
+void main() async {
+  // Avoid errors caused by flutter upgrade.
+  // Importing 'package:flutter/widgets.dart' is required.
+  WidgetsFlutterBinding.ensureInitialized();
+  // Open the database and store the reference.
+  final database = openDatabase(
+    join(await getDatabasesPath(), 'doggie_database.db'),
+    onCreate: (db, version) {
+      return db.execute(
+        'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
+      );
+    },
+    version: 1,
+  );
 
-const List<Widget> vegetables = <Widget>[
-  Text('Tomatoes'),
-  Text('Potatoes'),
-  Text('Carrots')
-];
-
-const List<Widget> icons = <Widget>[
-  Icon(Icons.sunny),
-  Icon(Icons.cloud),
-  Icon(Icons.ac_unit),
-];
-
-void main() => runApp(const ToggleButtonsExampleApp());
-
-class ToggleButtonsExampleApp extends StatelessWidget {
-  const ToggleButtonsExampleApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: ToggleButtonsSample(title: 'ToggleButtons Sample'),
+  Future<void> insertDog(Dog dog) async {
+    // Get a reference to the database.
+    final db = await database;
+    await db.insert(
+      'dogs',
+      dog.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
-}
 
-class ToggleButtonsSample extends StatefulWidget {
-  const ToggleButtonsSample({super.key, required this.title});
+  // A method that retrieves all the dogs from the dogs table.
+  Future<List<Dog>> dogs() async {
+    // Get a reference to the database.
+    final db = await database;
 
-  final String title;
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps = await db.query('dogs');
 
-  @override
-  State<ToggleButtonsSample> createState() => _ToggleButtonsSampleState();
-}
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return Dog(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        age: maps[i]['age'],
+      );
+    });
+  }
 
-class _ToggleButtonsSampleState extends State<ToggleButtonsSample> {
-  final List<bool> _selectedFruits = <bool>[true, false, false];
-  final List<bool> _selectedVegetables = <bool>[false, true, false];
-  final List<bool> _selectedWeather = <bool>[false, false, true];
-  bool vertical = false;
+  Future<void> updateDog(Dog dog) async {
+    // Get a reference to the database.
+    final db = await database;
 
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // ToggleButtons with a single selection.
-              Text('Single-select', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 5),
-              ToggleButtons(
-                direction: vertical ? Axis.vertical : Axis.horizontal,
-                onPressed: (int index) {
-                  setState(() {
-                    // The button that is tapped is set to true, and the others to false.
-                    for (int i = 0; i < _selectedFruits.length; i++) {
-                      _selectedFruits[i] = i == index;
-                    }
-                  });
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: Colors.red[700],
-                selectedColor: Colors.white,
-                fillColor: Colors.red[200],
-                color: Colors.red[400],
-                constraints: const BoxConstraints(
-                  minHeight: 40.0,
-                  minWidth: 80.0,
-                ),
-                isSelected: _selectedFruits,
-                children: fruits,
-              ),
-              const SizedBox(height: 20),
-              // ToggleButtons with a multiple selection.
-              Text('Multi-select', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 5),
-              ToggleButtons(
-                direction: vertical ? Axis.vertical : Axis.horizontal,
-                onPressed: (int index) {
-                  // All buttons are selectable.
-                  setState(() {
-                    _selectedVegetables[index] = !_selectedVegetables[index];
-                  });
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: Colors.green[700],
-                selectedColor: Colors.white,
-                fillColor: Colors.green[200],
-                color: Colors.green[400],
-                constraints: const BoxConstraints(
-                  minHeight: 40.0,
-                  minWidth: 80.0,
-                ),
-                isSelected: _selectedVegetables,
-                children: vegetables,
-              ),
-              const SizedBox(height: 20),
-              // ToggleButtons with icons only.
-              Text('Icon-only', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 5),
-              ToggleButtons(
-                direction: vertical ? Axis.vertical : Axis.horizontal,
-                onPressed: (int index) {
-                  setState(() {
-                    // The button that is tapped is set to true, and the others to false.
-                    for (int i = 0; i < _selectedWeather.length; i++) {
-                      _selectedWeather[i] = i == index;
-                    }
-                  });
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: Colors.blue[700],
-                selectedColor: Colors.white,
-                fillColor: Colors.blue[200],
-                color: Colors.blue[400],
-                isSelected: _selectedWeather,
-                children: icons,
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          setState(() {
-            // When the button is pressed, ToggleButtons direction is changed.
-            vertical = !vertical;
-          });
-        },
-        icon: const Icon(Icons.screen_rotation_outlined),
-        label: Text(vertical ? 'Horizontal' : 'Vertical'),
-      ),
+    // Update the given Dog.
+    await db.update(
+      'dogs',
+      dog.toMap(),
+      // Ensure that the Dog has a matching id.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [dog.id],
     );
+  }
+
+  Future<void> deleteDog(int id) async {
+    // Get a reference to the database.
+    final db = await database;
+    // Remove the Dog from the database.
+    await db.delete(
+      'dogs',
+      // Use a `where` clause to delete a specific dog.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [id],
+    );
+  }
+
+  // Create a Dog and add it to the dogs table
+  var fido = const Dog(
+    id: 0,
+    name: 'Fido',
+    age: 35,
+  );
+
+  await insertDog(fido);
+
+  // Now, use the method above to retrieve all the dogs.
+  print(await dogs()); // Prints a list that include Fido.
+
+  // Update Fido's age and save it to the database.
+  fido = Dog(
+    id: fido.id,
+    name: fido.name,
+    age: fido.age + 7,
+  );
+  await updateDog(fido);
+
+  // Print the updated results.
+  print(await dogs()); // Prints Fido with age 42.
+
+  // Delete Fido from the database.
+  await deleteDog(fido.id);
+
+  // Print the list of dogs (empty).
+  print(await dogs());
+}
+
+class Dog {
+  final int id;
+  final String name;
+  final int age;
+
+  const Dog({
+    required this.id,
+    required this.name,
+    required this.age,
+  });
+
+  // Convert a Dog into a Map. The keys must correspond to the names of the
+  // columns in the database.
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'age': age,
+    };
+  }
+
+  // Implement toString to make it easier to see information about
+  // each dog when using the print statement.
+  @override
+  String toString() {
+    return 'Dog{id: $id, name: $name, age: $age}';
   }
 }
