@@ -250,7 +250,6 @@ class _OptionPage extends State<OptionPage>{
                   fixedSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width-40,MediaQuery.of(context).size.height/20))
                 ),
                 onPressed: (){
-                  print(type);
                   if(widget.drink.calculateTotal(size,shot) != 0 && cal() !=0 && type >=1110){
                     widget.cart.list_contains.add(Contains(drink: widget.drink, type: cal()));
                     Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client: widget.client,)));

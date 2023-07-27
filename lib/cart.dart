@@ -118,7 +118,6 @@ class _CartPage extends State<CartPage>{
                       ),
                       onPressed: (){
                         setState(() {
-                          print(widget.cart.id);
                           if(widget.cart.list_contains.isNotEmpty){
                             DateTime now = DateTime.now();
                             for(var i in widget.cart.list_contains){

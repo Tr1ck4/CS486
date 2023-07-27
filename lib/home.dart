@@ -38,7 +38,6 @@ class _HomePage extends State<HomePage>{
     for(int i = 0 ; i < 8-widget.client.loyalty;i++){
       ls.add(Icon(Icons.coffee,color: Colors.grey,));
     }
-    print(cart.id);
   }
   @override
   Widget build(BuildContext context){
