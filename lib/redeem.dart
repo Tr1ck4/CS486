@@ -68,7 +68,7 @@ class _RedeemPage extends State<RedeemPage>{
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cart: widget.cart,client: widget.client,)));
                                   }
                                 },
-                                style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.indigoAccent)),
+                                style: widget.client.points >= (list_voucher[index].point)?const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.indigoAccent)):const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.grey)),
                                 child: Text(
                                     '${list_voucher[index].point}Pts',
                                     style: const TextStyle(fontSize: 15)
