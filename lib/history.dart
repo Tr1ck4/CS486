@@ -10,27 +10,13 @@ class HistoryPage extends StatefulWidget{
 }
 class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
   late TabController _tabController;
-  int tr = 0;
-  int f = 0;
-  List<Cart> on = [];
-  List<Cart> off = [];
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    for(var i in list_client){
-      for (var  j in i.list_cart){
-        if(j.isDone ==false) {
-          on.add(j);
-        } else{
-          off.add(j);
-        }
-      }
-    }
   }
   void refresh(){
     setState(() {
-
     });
   }
   @override
@@ -69,119 +55,122 @@ class _HistoryPage extends State<HistoryPage> with TickerProviderStateMixin{
         physics: const NeverScrollableScrollPhysics(),
         children: <Widget>[
           ListView.builder(
-            shrinkWrap: true,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: list_client.length,
-            itemBuilder: (context, index){
-              List<Widget> ls = [];
-              for(var i in list_client[index].list_cart){
-                if(i.isDone == false){
-                  for(var j in i.list_contains){
-                    ls.add(
-                      InkWell(
-                          onTap: (){
-                            i.isDone = true;
-                            refresh();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(on[index].time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          const Icon(Icons.coffee),
-                                          Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(j.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
-
-                                        ],
-                                      ),
-                                    ),
-                                    Text('\$${j.drink.calculateTotal(((j.type%100 - j.type%10)/10).round(),((j.type - j.type%1000-j.type%100 - j.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 85,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Icon(Icons.map_outlined),
-                                      Text(list_client[index].address,style: const TextStyle(fontWeight: FontWeight.bold),)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                      )
-                    );
-                  }
-                }
-              }
-              return ls.isEmpty ? null : Column(children: ls,);
-            }
-          ),
-          ListView.builder(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: list_client.length,
               itemBuilder: (context, index){
                 List<Widget> ls = [];
-                for(var i in list_client[index].list_cart){
-                  if(i.isDone == true){
-                    for(var j in i.list_contains){
-                      ls.add(
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(on[index].time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                if(index==0){
+                  for (var f in list_client){
+                    print(list_client.length);
+                    for(var i in f.list_cart){
+                      if(i.isDone == false){
+                        for(var j in i.list_contains){
+                          print('${f.name} ${j.drink.name}');
+                          ls.add(
+                              InkWell(
+                                  onTap: (){
+                                    i.isDone = true;
+                                    refresh();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Icon(Icons.coffee),
-                                        Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(j.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
+                                        Text(i.time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  const Icon(Icons.coffee),
+                                                  Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(j.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
 
+                                                ],
+                                            ),
+                                            Text('\$${j.drink.calculateTotal(((j.type%100 - j.type%10)/10).round(),((j.type - j.type%1000-j.type%100 - j.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.map_outlined),
+                                            Padding(padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),child: Text(f.address.length>10?'${f.address.substring(0,10)}...':f.address))
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                  Text('\$${j.drink.calculateTotal(((j.type%100 - j.type%10)/10).round(),((j.type - j.type%1000-j.type%100 - j.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 85,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Icon(Icons.map_outlined),
-                                    Text(list_client[index].address,style: const TextStyle(fontWeight: FontWeight.bold),)
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      );
+                                  )
+                              )
+                          );
+                        }
+                      }
                     }
                   }
+                  return ls.isEmpty ? null : Column(children: ls,);
                 }
-                return ls.isEmpty ? null : Column(children: ls,);
+
               }
           ),
+          ListView.builder(
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: list_client.length,
+                  itemBuilder: (context, index){
+                    if(index==0){
+                      List<Widget> ls = [];
+                      for(var f in list_client){
+                        print(f.name);
+                        for(var i in f.list_cart){
+                          if(i.isDone == true){
+                            for(var j in i.list_contains){
+                              print(j.drink.name);
+                              ls.add(
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(i.time ,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey)),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                const Icon(Icons.coffee),
+                                                Padding(padding: const EdgeInsets.symmetric(horizontal: 12),child: Text(j.drink.name as String,style: const TextStyle(fontWeight: FontWeight.bold)),)
+
+                                              ],
+                                            ),
+                                            Text('\$${j.drink.calculateTotal(((j.type%100 - j.type%10)/10).round(),((j.type - j.type%1000-j.type%100 - j.type%10)/1000).round())}',style: const TextStyle(fontSize: 25),),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.map_outlined),
+                                            Padding(padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),child: Text(f.address.length>10?'${f.address.substring(0,10)}...':f.address))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                              );
+                            }
+                          }
+                        }
+                      }
+                      return ls.isEmpty ? null : Column(children: ls,);
+                    }
+                  }
+              ),
         ]
       ),
       bottomNavigationBar: Container(

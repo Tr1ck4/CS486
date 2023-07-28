@@ -128,6 +128,8 @@ class _CartPage extends State<CartPage>{
                             widget.cart.time = "${now.year.toString()}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')} ${now.hour.toString().padLeft(2,'0')}-${now.minute.toString().padLeft(2,'0')}";
                             widget.client.list_cart.add(widget.cart);
                             widget.client.loyalty += widget.cart.list_contains.length;
+                            print('id ${widget.cart.id}');
+
                             Navigator.push(context, MaterialPageRoute(builder: (context) => DonePage(client: widget.client,),));
                             widget.cart = Cart(isDone: false);
                           }

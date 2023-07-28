@@ -161,8 +161,8 @@ class _ProfilePage extends State<ProfilePage>{
                 )
             ),
             FilledButton(onPressed: (){
-
               list_client.add(Client(address: aaddress, loyalty: widget.client.loyalty, points: widget.client.points,email: aemail, phone: aphone,name: aname));
+              print(list_client.length);
               Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(client:list_client.last),));
             }, child: const Text('Submit'))
           ],

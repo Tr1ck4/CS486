@@ -83,7 +83,7 @@ class _HomePage extends State<HomePage>{
                       IconButton(
                           onPressed: (){
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => ProfilePage(client: list_client[0]),)
+                                MaterialPageRoute(builder: (context) => ProfilePage(client: list_client.last),)
                             );
                           },
                           icon: const Icon(Icons.person)
@@ -226,7 +226,7 @@ class _HomePage extends State<HomePage>{
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => RewardPage(client: widget.client,cart: cart,),));
                                   }, icon: const Icon(Icons.card_giftcard)),
                                   IconButton(onPressed: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryPage(),));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryPage(),));
                                   }, icon: const Icon(Icons.bookmark_border)),
                                 ],
                               )
